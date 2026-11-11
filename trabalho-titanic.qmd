@@ -1,43 +1,137 @@
 ---
-title: "Quem sobreviveu ao Titanic? Uma análise com modelos lineares generalizados"
-subtitle: "Trabalho da disciplina de Modelos Lineares Generalizados (EST079)"
-author:
-  - Andrei Gustavo Sartao
-  - Lucas Teodoro de Paula Silva
-  - Ewerton Albuquerque do Nascimento
-  - Cassio Alexandre dos Santos
-  - Gabriel Vilela Lin
-date: today
-lang: pt
-abstract: |
-  Este trabalho analisa os fatores associados à sobrevivência de passageiros do naufrágio do Titanic, em 1912. A variável resposta indica se a pessoa sobreviveu. As explicativas são classe, idade, sexo e se o passageiro viajava sozinho. Comparamos três funções de ligação para o modelo binomial (logit, probit e complemento log-log), escolhemos um modelo por validação cruzada repetida e avaliamos seu desempenho em um conjunto de teste separado. Os resultados indicam que sexo, classe e idade estão associados à sobrevivência.
-keywords: [regressão binária, ligação logit, ligação probit, ligação cloglog, validação cruzada, Titanic]
+lang: pt-BR
+
 format:
   pdf:
     documentclass: article
+    pdf-engine: lualatex
     papersize: a4
-    fontsize: 11pt
+    fontsize: 12pt
+
     geometry:
-      - a4paper
-      - margin=2.3cm
-    toc: true
-    toc-depth: 2
+      - top=3cm
+      - left=3cm
+      - right=2cm
+      - bottom=2cm
+
+    linestretch: 1.5
+
+    toc: false
     number-sections: true
+    number-depth: 3
+
     colorlinks: true
+    linkcolor: black
+    urlcolor: black
+
+    fig-align: center
+    fig-width: 6
+    fig-height: 4
+    fig-format: pdf
+
+    
     include-in-header:
       text: |
+        \setlength{\parindent}{1.25cm}
+        \setlength{\parskip}{0pt}
+
         \makeatletter
-        \AtBeginDocument{\@ifundefined{pandocbounded}{}{\renewcommand{\pandocbounded}[1]{#1}}}
+
+        \def\ps@abnt{%
+          \def\@oddhead{\hfill\thepage}%
+          \def\@evenhead{\hfill\thepage}%
+          \let\@oddfoot\@empty
+          \let\@evenfoot\@empty
+        }
+
+        \AtBeginDocument{%
+          \@ifundefined{pandocbounded}{}{%
+            \renewcommand{\pandocbounded}[1]{#1}
+          }
+        }
+
         \makeatother
+
+
 execute:
   echo: false
   warning: false
   message: false
-  fig-width: 6
-  fig-height: 4
-  fig-align: center
-  fig-format: pdf
 ---
+
+
+\clearpage
+
+
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+
+\textbf{UNIVERSIDADE FEDERAL DE MINAS GERAIS}
+
+\vspace{3cm}
+
+ANDREI GUSTAVO SARTAO
+
+LUCAS TEODORO DE PAULA SILVA
+
+EWERTON ALBUQUERQUE DO NASCIMENTO
+
+CASSIO ALEXANDRE DOS SANTOS
+
+GABRIEL VILELA LIN
+
+\vfill
+
+\textbf{QUEM SOBREVIVEU AO TITANIC? UMA ANÁLISE
+COM MODELOS LINEARES GENERALIZADOS}
+
+\vfill
+
+BELO HORIZONTE
+
+2026
+
+\end{center}
+\end{titlepage}
+\setcounter{page}{1}
+\pagestyle{empty}
+
+\clearpage
+
+
+\begin{center}
+\textbf{RESUMO}
+\end{center}
+
+\noindent
+Este trabalho analisa os fatores associados à
+sobrevivência de passageiros do naufrágio do
+Titanic, em 1912. A variável resposta indica
+se a pessoa sobreviveu. As explicativas são
+classe, idade, sexo e se o passageiro viajava
+sozinho. Comparamos três funções de ligação
+para o modelo binomial (logit, probit e
+complemento log-log), escolhemos um modelo
+por validação cruzada repetida e avaliamos
+seu desempenho em um conjunto de teste
+separado. Os resultados indicam que sexo,
+classe e idade estão associados à sobrevivência.
+
+\noindent
+\textbf{Palavras-chave:} Modelos lineares
+generalizados; regressão binária; logit;
+probit; Titanic.
+
+\clearpage
+
+\tableofcontents
+
+\clearpage
+
+\setcounter{page}{1}
+\pagestyle{abnt}
+\thispagestyle{abnt}
 
 # Introdução
 
@@ -45,9 +139,9 @@ O navio Titanic naufragou em 14 de abril de 1912, na sua viagem inaugural. Este 
 
 Temos três objetivos:
 
-1. Descrever o perfil dos passageiros e a sobrevivência em cada grupo.
-2. Ajustar modelos binomiais com três funções de ligação e comparar seu ajuste.
-3. Escolher um modelo por validação cruzada e avaliar seu desempenho em dados novos.
+1.  Descrever o perfil dos passageiros e a sobrevivência em cada grupo.
+2.  Ajustar modelos binomiais com três funções de ligação e comparar seu ajuste.
+3.  Escolher um modelo por validação cruzada e avaliar seu desempenho em dados novos.
 
 > **Nota: Por que um modelo linear generalizado?**
 >
@@ -213,9 +307,9 @@ $$
 
 As três funções de ligação são:
 
-- **Logit:** $g(\pi) = \log\{\pi/(1-\pi)\}$.
-- **Probit:** $g(\pi) = \Phi^{-1}(\pi)$, em que $\Phi$ é a função de distribuição normal padrão.
-- **Complemento log-log (cloglog):** $g(\pi) = \log\{-\log(1-\pi)\}$.
+-   **Logit:** $g(\pi) = \log\{\pi/(1-\pi)\}$.
+-   **Probit:** $g(\pi) = \Phi^{-1}(\pi)$, em que $\Phi$ é a função de distribuição normal padrão.
+-   **Complemento log-log (cloglog):** $g(\pi) = \log\{-\log(1-\pi)\}$.
 
 Na análise completa, ajustamos os três modelos com todas as variáveis.
 
@@ -665,13 +759,13 @@ A classe também tem efeito claro. Passageiros da classe III tiveram chance bem 
 
 # Conclusões
 
-- O sexo, a classe e a idade estão associados à sobrevivência, mesmo com as outras variáveis fixas.
-- O efeito de viajar sozinho não é detectável no modelo completo.
-- As três funções de ligação têm desempenho muito parecido. O logit foi escolhido pelo critério de maior AUC na validação cruzada.
-- No conjunto de teste, o modelo final tem AUC de `r fmt(auc_proc)` e acurácia de `r fmt(accuracy(preds_teste, truth = vivo, estimate = .pred_class)$.estimate)`.
+-   O sexo, a classe e a idade estão associados à sobrevivência, mesmo com as outras variáveis fixas.
+-   O efeito de viajar sozinho não é detectável no modelo completo.
+-   As três funções de ligação têm desempenho muito parecido. O logit foi escolhido pelo critério de maior AUC na validação cruzada.
+-   No conjunto de teste, o modelo final tem AUC de `r fmt(auc_proc)` e acurácia de `r fmt(accuracy(preds_teste, truth = vivo, estimate = .pred_class)$.estimate)`.
 
 # Limitações
 
-- O banco tem `r n_repetidas` linhas repetidas. Como não há identificador de passageiro, não sabemos se são pessoas diferentes com as mesmas características. Mantivemos as linhas, mas repetições podem tornar as métricas da validação cruzada um pouco otimistas.
-- Os resultados mostram associação, não causa.
-- Os dados se referem a um único naufrágio, de 1912, e não a outros cenários.
+-   O banco tem `r n_repetidas` linhas repetidas. Como não há identificador de passageiro, não sabemos se são pessoas diferentes com as mesmas características. Mantivemos as linhas, mas repetições podem tornar as métricas da validação cruzada um pouco otimistas.
+-   Os resultados mostram associação, não causa.
+-   Os dados se referem a um único naufrágio, de 1912, e não a outros cenários.
